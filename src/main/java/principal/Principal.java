@@ -1,22 +1,11 @@
 package principal;
 
-import javax.swing.JOptionPane;
-import model.Amigo;
-import model.Ferramentas;
+import javafx.application.Application;
+import view.AmigoView;
 
 public class Principal {
 
     public static void main(String[] args) {
-
-        Amigo amigo = new Amigo();
-        //amigo.ler();
-        JOptionPane.showMessageDialog(null, amigo.test());
-
-        Ferramentas ferramentas = new Ferramentas();
-
-        JOptionPane.showMessageDialog(null, ferramentas.test());
-    
-     
-    
+        Application.launch(AmigoView.class, args);
     }
 }

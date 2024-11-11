@@ -9,7 +9,6 @@ public class Ferramentas {
 
     public Ferramentas() {
         this(2, "Machado", "Collins", 25);
-
     }
 
     public Ferramentas(int id, String nome, String marca, double custoAquisicao) {
