@@ -3,7 +3,7 @@ Este projeto tem por objetivo criar um sistema de empréstimo de ferramentas. O 
 
 Alunos colaboradores:
 - José Pedro Kuhnen Sens (RA 162210357) - josepedro1903
-- José Vitor Teófilo da Silva (RA 162210589) - JoseVitor2510
+- José Vitor Teófilo da Silva (RA 162210589) - JoseVitor2510 ou josevitorteofilosl@gmail.com
 - Lucas Oliveira de Sousa (RA 162220642) - LucasSousa96
 
 Requisitos funcionais:
