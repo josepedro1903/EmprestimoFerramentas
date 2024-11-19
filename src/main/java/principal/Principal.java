@@ -1,11 +1,11 @@
 package principal;
 
 import javafx.application.Application;
-import view.AmigoView;
+import view.MainView;
 
 public class Principal {
 
     public static void main(String[] args) {
-        Application.launch(AmigoView.class, args);
+        Application.launch(MainView.class, args);
     }
 }
