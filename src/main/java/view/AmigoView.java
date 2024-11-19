@@ -19,6 +19,12 @@ public class AmigoView extends Application {
     private TextField nomeField = new TextField();
     private TextField telefoneField = new TextField();
     private Amigo amigoSelecionado = null;
+    private Stage mainStage; // Referência à MainView
+
+    // Construtor para passar o mainStage
+    public AmigoView(Stage mainStage) {
+        this.mainStage = mainStage;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -37,6 +43,13 @@ public class AmigoView extends Application {
         Button btnAtualizar = new Button("Atualizar Lista");
         Button btnEditar = new Button("Editar Amigo");
         Button btnExcluir = new Button("Excluir Amigo");
+        Button btnVoltar = new Button("Voltar");
+
+        // Ação do botão "Voltar"
+        btnVoltar.setOnAction(e -> {
+            primaryStage.close(); // Fecha a tela atual (Amigos)
+            mainStage.show(); // Mostra novamente a tela principal
+        });
 
         // Ação do botão adicionar
         btnAdicionar.setOnAction(e -> {
@@ -112,7 +125,7 @@ public class AmigoView extends Application {
         });
 
         // Adicionando elementos ao layout
-        layout.getChildren().addAll(new Label("Nome:"), nomeField, new Label("Telefone:"), telefoneField, btnAdicionar, btnAtualizar, btnEditar, btnExcluir, listView);
+        layout.getChildren().addAll(new Label("Nome:"), nomeField, new Label("Telefone:"), telefoneField, btnAdicionar, btnAtualizar, btnEditar, btnExcluir, btnVoltar, listView);
 
         // Configuração da cena e exibição
         Scene scene = new Scene(layout, 400, 500);
