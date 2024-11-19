@@ -2,9 +2,9 @@
 Este projeto tem por objetivo criar um sistema de empréstimo de ferramentas. O sistema utilizará um banco de dados para registrar diversas informações sobre o uso das ferramentas.
 
 Alunos colaboradores:
-- José Pedro Kuhnen Sens (RA 162210357)
-- José Vitor Teófilo da Silva (RA 162210589)
-- Lucas Oliveira de Sousa (RA 162220642)
+- José Pedro Kuhnen Sens (RA 162210357) - josepedro1903
+- José Vitor Teófilo da Silva (RA 162210589) - JoseVitor2510
+- Lucas Oliveira de Sousa (RA 162220642) - LucasSousa96
 
 Requisitos funcionais:
  - Deve possuir um cadastro de ferramentas com nome, marca e custo de aquisição
