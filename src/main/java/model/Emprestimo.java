@@ -6,14 +6,14 @@ public class Emprestimo {
 
     private int id;
     private Amigo amigo;
-    private List<Ferramentas> ferramentas;
+    private List<Ferramenta> ferramentas;
 
     public Emprestimo() {
         this(1, null, null);
 
     }
 
-    public Emprestimo(int id, Amigo amigo, List<Ferramentas> ferramentas) {
+    public Emprestimo(int id, Amigo amigo, List<Ferramenta> ferramentas) {
         this.id = id;
         this.amigo = amigo;
         this.ferramentas = ferramentas;
@@ -27,7 +27,7 @@ public class Emprestimo {
         return amigo;
     }
 
-    public List<Ferramentas> getFerramentas() {
+    public List<Ferramenta> getFerramentas() {
         return ferramentas;
     }
 
@@ -39,7 +39,7 @@ public class Emprestimo {
         this.amigo = amigo;
     }
 
-    public void setFerramentas(List<Ferramentas> ferramentas) {
+    public void setFerramentas(List<Ferramenta> ferramentas) {
         this.ferramentas = ferramentas;
     }
 

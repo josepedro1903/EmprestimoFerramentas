@@ -7,19 +7,19 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert.AlertType;
-import dao.FerramentasDAO;
-import model.Ferramentas;
+import dao.FerramentaDAO;
+import model.Ferramenta;
 
 import java.util.List;
 
 public class FerramentaView extends Application {
 
-    private FerramentasDAO ferramentasDAO = new FerramentasDAO();
+    private FerramentaDAO ferramentasDAO = new FerramentaDAO();
     private ListView<String> listView = new ListView<>();
     private TextField nomeField = new TextField();
     private TextField marcaField = new TextField();
     private TextField custoAquisicaoField = new TextField();
-    private Ferramentas ferramentaSelecionada = null;
+    private Ferramenta ferramentaSelecionada = null;
     private Stage mainStage; // Referência à MainView
 
     // Construtor para passar o mainStage
@@ -60,7 +60,7 @@ public class FerramentaView extends Application {
             if (!nome.isEmpty() && !marca.isEmpty() && !custo.isEmpty()) {
                 try {
                     double custoAquisicao = Double.parseDouble(custo);
-                    Ferramentas novaFerramenta = new Ferramentas();
+                    Ferramenta novaFerramenta = new Ferramenta();
                     novaFerramenta.setNome(nome);
                     novaFerramenta.setMarca(marca);
                     novaFerramenta.setCustoAquisicao(custoAquisicao);
@@ -161,8 +161,8 @@ public class FerramentaView extends Application {
 
     private void atualizarListaFerramentas() {
         listView.getItems().clear();
-        List<Ferramentas> ferramentas = ferramentasDAO.listarFerramentas();
-        for (Ferramentas ferramenta : ferramentas) {
+        List<Ferramenta> ferramentas = ferramentasDAO.listarFerramentas();
+        for (Ferramenta ferramenta : ferramentas) {
             listView.getItems().add(ferramenta.getId() + " - " + ferramenta.getNome() + " (" + ferramenta.getMarca() + " - R$ " + ferramenta.getCustoAquisicao() + ")");
         }
     }
