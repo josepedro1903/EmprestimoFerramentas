@@ -5,42 +5,46 @@ import java.util.List;
 public class Emprestimo {
 
     private int id;
-    private Amigo amigo;
-    private List<Ferramenta> ferramentas;
+    private int amigo_id;
+    private int ferramenta_id;
 
     public Emprestimo() {
-        this(1, null, null);
+        this(1, 0, 0);
 
     }
 
-    public Emprestimo(int id, Amigo amigo, List<Ferramenta> ferramentas) {
+    public Emprestimo(int id,int amigo_id, int ferramenta_id) {
         this.id = id;
-        this.amigo = amigo;
-        this.ferramentas = ferramentas;
+        this.amigo_id = amigo_id;
+        this.ferramenta_id = ferramenta_id;
     }
 
     public int getId() {
         return id;
     }
 
-    public Amigo getAmigo() {
-        return amigo;
-    }
-
-    public List<Ferramenta> getFerramentas() {
-        return ferramentas;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setAmigo(Amigo amigo) {
-        this.amigo = amigo;
+    public int getAmigo_id() {
+        return amigo_id;
     }
 
-    public void setFerramentas(List<Ferramenta> ferramentas) {
-        this.ferramentas = ferramentas;
+    public void setAmigo_id(int amigo_id) {
+        this.amigo_id = amigo_id;
     }
+
+    public int getFerramenta_id() {
+        return ferramenta_id;
+    }
+
+    public void setFerramenta_id(int ferramenta_id) {
+        this.ferramenta_id = ferramenta_id;
+    }
+
+    
+    
+ 
 
 }
