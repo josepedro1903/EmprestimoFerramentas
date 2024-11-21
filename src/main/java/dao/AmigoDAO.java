@@ -67,24 +67,47 @@ public class AmigoDAO {
     }
 
     public Amigo buscarPorId(int id) {
+        Amigo amigo = null;
         String sql = "SELECT * FROM amigos WHERE id = ?";
-        try (Connection conn = Conexao.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Amigo amigo = new Amigo();
-                    amigo.setId(rs.getInt("id"));
-                    amigo.setNome(rs.getString("nome"));
-                    amigo.setTelefone(rs.getString("telefone"));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                amigo = new Amigo();
+                amigo.setId(rs.getInt("id"));
+                amigo.setNome(rs.getString("nome"));
+                amigo.setTelefone(rs.getString("telefone"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigo;
+    }
 
-                    return amigo;
-                }
+    public Amigo amigoComMaisEmprestimos() {
+        String sql = "SELECT amigo_id, COUNT(*) AS total FROM emprestimos GROUP BY amigo_id ORDER BY total DESC LIMIT 1";
+        try (Connection conn = Conexao.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                int amigoId = rs.getInt("amigo_id");
+                return buscarPorId(amigoId); // Retorna o amigo
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    public List<Amigo> amigosComPendencias() {
+        List<Amigo> amigos = new ArrayList<>();
+        String sql = "SELECT DISTINCT amigo_id FROM emprestimos WHERE data_devolucao IS NULL";
+        try (Connection conn = Conexao.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                amigos.add(buscarPorId(rs.getInt("amigo_id")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigos;
+    }
+
 }
