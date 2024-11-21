@@ -21,7 +21,6 @@ public class FerramentaDAO {
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 ferramenta.setId(generatedKeys.getInt(1));
-                System.out.println("Ferramenta adicionada com ID: " + ferramenta.getId());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,4 +87,17 @@ public class FerramentaDAO {
         }
         return ferramenta;
     }
+
+    public double calcularCustoTotalFerramentas() {
+        String sql = "SELECT SUM(custoAquisicao) FROM ferramentas";
+        try (Connection conn = Conexao.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
 }

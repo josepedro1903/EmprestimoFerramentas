@@ -26,6 +26,7 @@ public class FerramentaView extends Application {
     public FerramentaView(Stage mainStage) {
         this.mainStage = mainStage;
     }
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Gerenciamento de Ferramentas");
