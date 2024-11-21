@@ -31,7 +31,6 @@ public class EmprestimoView extends Application {
     private ListView<Ferramenta> ferramentasListView = new ListView<>();
     private ListView<String> emprestimosListView = new ListView<>();
     private DatePicker dataEmprestimoPicker = new DatePicker();
-    private DatePicker dataDevolucaoPicker = new DatePicker();
 
     @Override
     public void start(Stage primaryStage) {
@@ -42,11 +41,10 @@ public class EmprestimoView extends Application {
 
         amigoComboBox.setPromptText("Selecione o amigo");
         ferramentasListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        dataEmprestimoPicker.setPromptText("Data de Empréstimo");
-        dataDevolucaoPicker.setPromptText("Data de Devolução");
+        dataEmprestimoPicker.setPromptText("Data de empréstimo");
 
-        Button btnAdicionar = new Button("Adicionar Empréstimo");
-        Button btnExcluir = new Button("Excluir Empréstimo");
+        Button btnAdicionar = new Button("Adicionar empréstimo");
+        Button btnDevolver = new Button("Devolver ferramenta");
         Button btnVoltar = new Button("Voltar");
 
         // Ação do botão Adicionar
@@ -54,13 +52,18 @@ public class EmprestimoView extends Application {
             Amigo amigo = amigoComboBox.getSelectionModel().getSelectedItem();
             List<Ferramenta> ferramentasSelecionadas = ferramentasListView.getSelectionModel().getSelectedItems();
             var dataEmprestimo = dataEmprestimoPicker.getValue();
-            var dataDevolucao = dataDevolucaoPicker.getValue();
 
             if (amigo != null && !ferramentasSelecionadas.isEmpty() && dataEmprestimo != null) {
+                // Verificar se o amigo já possui empréstimos ativos
+                if (emprestimoDAO.amigoTemEmprestimosAtivos(amigo.getId())) {
+                    mostrarMensagem("Este amigo já possui um empréstimo ativo e não pode realizar um novo empréstimo.");
+                    return; // Impede a execução do restante do código
+                }
+
+                // Configurar o empréstimo
                 Emprestimo emprestimo = new Emprestimo();
                 emprestimo.setAmigo_id(amigo.getId());
                 emprestimo.setDataEmprestimo(dataEmprestimo);
-                emprestimo.setDataDevolucao(dataDevolucao);
 
                 // Adiciona o empréstimo e associa as ferramentas selecionadas
                 emprestimoDAO.adicionarEmprestimo(
@@ -75,16 +78,16 @@ public class EmprestimoView extends Application {
             }
         });
 
-        // Ação do botão Excluir
-        btnExcluir.setOnAction(e -> {
+        // Ação do botão Devolver
+        btnDevolver.setOnAction(e -> {
             String selectedItem = emprestimosListView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 int idEmprestimo = Integer.parseInt(selectedItem.split(" - ")[0]);
-                emprestimoDAO.deletarEmprestimo(idEmprestimo);
+                emprestimoDAO.devolverEmprestimo(idEmprestimo); // Marca a data de devolução no banco
                 atualizarListaEmprestimos();
-                mostrarMensagem("Empréstimo excluído com sucesso!");
+                mostrarMensagem("Empréstimo devolvido com sucesso!");
             } else {
-                mostrarMensagem("Selecione um empréstimo para excluir.");
+                mostrarMensagem("Selecione um empréstimo para devolver.");
             }
         });
 
@@ -102,12 +105,11 @@ public class EmprestimoView extends Application {
                 new Label("Amigo:"), amigoComboBox,
                 new Label("Ferramentas (selecione múltiplas):"), ferramentasListView,
                 new Label("Data de Empréstimo:"), dataEmprestimoPicker,
-                new Label("Data de Devolução:"), dataDevolucaoPicker,
-                btnAdicionar, btnExcluir, btnVoltar,
-                new Label("Empréstimos:"), emprestimosListView
+                btnAdicionar, btnDevolver, btnVoltar,
+                new Label("Empréstimos Ativos:"), emprestimosListView
         );
 
-        Scene scene = new Scene(layout, 450, 650);
+        Scene scene = new Scene(layout, 450, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -124,17 +126,30 @@ public class EmprestimoView extends Application {
 
     private void atualizarListaEmprestimos() {
         emprestimosListView.getItems().clear();
-        List<Emprestimo> emprestimos = emprestimoDAO.listarEmprestimos();
+        List<Emprestimo> emprestimos = emprestimoDAO.listarEmprestimosAtivos(); // Apenas empréstimos sem data de devolução
+        System.out.println("Emprestimos ativos: " + emprestimos); // Verifique se a lista está vindo nula ou vazia
         for (Emprestimo emprestimo : emprestimos) {
             Amigo amigo = amigoDAO.buscarPorId(emprestimo.getAmigo_id());
+            if (amigo == null) {
+                System.out.println("Amigo não encontrado para ID: " + emprestimo.getAmigo_id());
+            }
             List<Integer> ferramentasIds = emprestimo.getFerramentasIds();
+            if (ferramentasIds == null) {
+                System.out.println("Ferramentas não encontradas para empréstimo ID: " + emprestimo.getId());
+            }
             List<String> ferramentasNomes = ferramentasIds.stream()
-                    .map(id -> ferramentaDAO.buscarPorId(id).getNome())
+                    .map(id -> {
+                        Ferramenta ferramenta = ferramentaDAO.buscarPorId(id);
+                        if (ferramenta == null) {
+                            System.out.println("Ferramenta não encontrada para ID: " + id);
+                        }
+                        return ferramenta != null ? ferramenta.getNome() : "N/A";
+                    })
                     .collect(Collectors.toList());
             emprestimosListView.getItems().add(
-                    emprestimo.getId() + " - " + amigo.getNome() + " - " + String.join(", ", ferramentasNomes)
+                    emprestimo.getId() + " - " + (amigo != null ? amigo.getNome() : "Amigo não encontrado")
+                    + " - " + String.join(", ", ferramentasNomes)
                     + " - Empréstimo: " + emprestimo.getDataEmprestimo()
-                    + (emprestimo.getDataDevolucao() != null ? " - Devolução: " + emprestimo.getDataDevolucao() : "")
             );
         }
     }
@@ -143,7 +158,6 @@ public class EmprestimoView extends Application {
         amigoComboBox.getSelectionModel().clearSelection();
         ferramentasListView.getSelectionModel().clearSelection();
         dataEmprestimoPicker.setValue(null);
-        dataDevolucaoPicker.setValue(null);
     }
 
     private void mostrarMensagem(String mensagem) {

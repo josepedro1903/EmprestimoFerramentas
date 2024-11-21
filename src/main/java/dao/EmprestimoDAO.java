@@ -16,7 +16,7 @@ public class EmprestimoDAO {
             // Inserir empréstimo na tabela 'emprestimos'
             stmt.setInt(1, emprestimo.getAmigo_id());
             stmt.setDate(2, Date.valueOf(emprestimo.getDataEmprestimo()));
-            stmt.setDate(3, emprestimo.getDataDevolucao() != null ? Date.valueOf(emprestimo.getDataDevolucao()) : null);
+            stmt.setDate(3, null);
             stmt.executeUpdate();
 
             // Recuperar o ID gerado para o empréstimo
@@ -96,6 +96,28 @@ public class EmprestimoDAO {
         return emprestimos;
     }
 
+    public List<Emprestimo> listarEmprestimosAtivos() {
+        List<Emprestimo> emprestimos = new ArrayList<>();
+        String sql = "SELECT * FROM emprestimos WHERE data_devolucao IS NULL";
+        try (Connection conn = Conexao.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Emprestimo emprestimo = new Emprestimo();
+                emprestimo.setId(rs.getInt("id"));
+                emprestimo.setAmigo_id(rs.getInt("amigo_id"));
+                emprestimo.setDataEmprestimo(rs.getDate("data_emprestimo").toLocalDate());
+
+                // Buscar ferramentas associadas ao empréstimo
+                List<Integer> ferramentasIds = buscarFerramentasPorEmprestimo(emprestimo.getId());
+                emprestimo.setFerramentasIds(ferramentasIds);
+
+                emprestimos.add(emprestimo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return emprestimos;
+    }
+
     public void deletarEmprestimo(int id) {
         String sql = "DELETE FROM emprestimos WHERE id = ?";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -129,4 +151,30 @@ public class EmprestimoDAO {
         }
         return ferramentasIds;
     }
+
+    public void devolverEmprestimo(int emprestimoId) {
+        String sql = "UPDATE emprestimos SET data_devolucao = ? WHERE id = ?";
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(java.time.LocalDate.now()));
+            stmt.setInt(2, emprestimoId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean amigoTemEmprestimosAtivos(int amigoId) {
+        String sql = "SELECT COUNT(*) FROM emprestimos WHERE amigo_id = ? AND data_devolucao IS NULL";
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, amigoId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
