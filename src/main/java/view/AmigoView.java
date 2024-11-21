@@ -36,7 +36,7 @@ public class AmigoView extends Application {
 
         // Campos de entrada
         nomeField.setPromptText("Nome");
-        telefoneField.setPromptText("Telefone");
+        telefoneField.setPromptText("Exemplo: 48 2512-4048");
 
         // Botões
         Button btnAdicionar = new Button("Adicionar Amigo");
@@ -55,6 +55,14 @@ public class AmigoView extends Application {
         btnAdicionar.setOnAction(e -> {
             String nome = nomeField.getText();
             String telefone = telefoneField.getText();
+            
+            telefone = formatarTelefone(telefone);
+            
+            if (!validarTelefone(telefone)) {
+                mostrarMensagem("O número de telefone está inválido.\nTente usar o formato DDD ????-????,\nExemplo: 48 2512-4048\nTelefone digitado:"+ telefone);
+                return;
+            }
+            
             if (!nome.isEmpty() && !telefone.isEmpty()) {
                 Amigo novoAmigo = new Amigo();
                 novoAmigo.setNome(nome);
@@ -153,4 +161,16 @@ public class AmigoView extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    private boolean validarTelefone(String telefone) {
+    // Expressão regular para validar o formato do telefone (ajuste conforme necessário)
+    return telefone.matches("\\(\\d{2}\\)\\d{4}\\-\\d{4}");
+    }
+    
+    private String formatarTelefone(String text) {
+    // Remove todos os caracteres não numéricos
+    String numbers = text.replaceAll("\\D", "");
+    // Formata o número de acordo com o padrão desejado (ajuste conforme necessário)
+    return numbers.replaceAll("(\\d{2})(\\d{4})(\\d{4})", "($1)$2-$3");
+}
 }
