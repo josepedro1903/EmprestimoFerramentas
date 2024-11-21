@@ -6,7 +6,6 @@ import dao.FerramentaDAO;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
@@ -14,7 +13,9 @@ import javafx.stage.Stage;
 import model.Amigo;
 import model.Emprestimo;
 import model.Ferramenta;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RelatorioView extends Application {
 
@@ -39,6 +40,7 @@ public class RelatorioView extends Application {
         Button btnRelatorioEmprestimosAtivos = new Button("Empréstimos ativos");
         Button btnRelatorioEmprestimosRealizados = new Button("Empréstimos realizados");
         Button btnRelatorioAmigosPendentes = new Button("Amigos com pendências");
+        Button btnRelatorioMaisEmprestimos = new Button("Amigo com mais empréstimos");
         Button btnVoltar = new Button("Voltar");
 
         // Área de texto para exibir os relatórios
@@ -109,6 +111,40 @@ public class RelatorioView extends Application {
             relatorioArea.setText(relatorio.toString());
         });
 
+        btnRelatorioMaisEmprestimos.setOnAction(e -> {
+            List<Emprestimo> emprestimos = emprestimoDAO.listarEmprestimos();
+            Map<Integer, Integer> emprestimosPorAmigo = new HashMap<>();
+
+            // Contar os empréstimos por amigo
+            for (Emprestimo emprestimo : emprestimos) {
+                emprestimosPorAmigo.put(
+                        emprestimo.getAmigo_id(),
+                        emprestimosPorAmigo.getOrDefault(emprestimo.getAmigo_id(), 0) + 1
+                );
+            }
+
+            // Encontrar o amigo com mais empréstimos
+            int amigoIdMaisEmprestimos = -1;
+            int maxEmprestimos = 0;
+            for (Map.Entry<Integer, Integer> entry : emprestimosPorAmigo.entrySet()) {
+                if (entry.getValue() > maxEmprestimos) {
+                    maxEmprestimos = entry.getValue();
+                    amigoIdMaisEmprestimos = entry.getKey();
+                }
+            }
+
+            // Buscar o nome do amigo
+            Amigo amigoMaisEmprestimos = amigoDAO.buscarPorId(amigoIdMaisEmprestimos);
+            if (amigoMaisEmprestimos != null) {
+                relatorioArea.setText(
+                        "Nome: " + amigoMaisEmprestimos.getNome() + "\n"
+                        + "Total de empréstimos: " + maxEmprestimos
+                );
+            } else {
+                relatorioArea.setText("Nenhum amigo encontrado com empréstimos.");
+            }
+        });
+
         // Ação do botão Voltar
         btnVoltar.setOnAction(e -> {
             mainStage.show();
@@ -120,6 +156,7 @@ public class RelatorioView extends Application {
                 btnRelatorioEmprestimosAtivos,
                 btnRelatorioEmprestimosRealizados,
                 btnRelatorioAmigosPendentes,
+                btnRelatorioMaisEmprestimos,
                 relatorioArea,
                 btnVoltar
         );
