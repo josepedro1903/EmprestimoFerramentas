@@ -65,4 +65,26 @@ public class AmigoDAO {
             System.out.println("Erro ao deletar amigo: " + e.getMessage());
         }
     }
+
+    public Amigo buscarPorId(int id) {
+        String sql = "SELECT * FROM amigos WHERE id = ?";
+        try (Connection conn = Conexao.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Amigo amigo = new Amigo();
+                    amigo.setId(rs.getInt("id"));
+                    amigo.setNome(rs.getString("nome"));
+                    amigo.setTelefone(rs.getString("telefone"));
+
+                    return amigo;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
