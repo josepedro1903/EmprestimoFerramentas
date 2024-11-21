@@ -53,4 +53,9 @@ public class Ferramenta {
     public String test() {
         return "ID: " + getId() + ", " + "NOME: " + getNome() + ", " + "Marca: " + getMarca() + ", " + "Custo: " + getCustoAquisicao() + ".";
     }
+
+    @Override
+    public String toString() {
+        return this.nome;
+    }
 }

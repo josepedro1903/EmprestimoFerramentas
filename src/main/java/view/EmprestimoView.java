@@ -19,10 +19,9 @@ import model.Amigo;
 import model.Emprestimo;
 import model.Ferramenta;
 
-
 public class EmprestimoView extends Application {
-    
-      private EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
+
+    private EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
     private AmigoDAO amigoDAO = new AmigoDAO();
     private FerramentaDAO ferramentaDAO = new FerramentaDAO();
 
@@ -140,6 +139,3 @@ public class EmprestimoView extends Application {
         launch(args);
     }
 }
-
-    
-    
