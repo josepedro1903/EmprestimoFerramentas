@@ -9,12 +9,9 @@ import java.util.List;
 
 public class FerramentaDAO {
 
- 
-
     public void adicionarFerramenta(Ferramenta ferramenta) {
-        String sql = "INSERT INTO ferramentas (nome, marca, custoAquisicao) VALUES (?, ?, ?)";
-        try (Connection conn = Conexao.getConnection(); 
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        String sql = "INSERT INTO ferramentas (nome, marca, custo_aquisicao) VALUES (?, ?, ?)";
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, ferramenta.getNome());
             stmt.setString(2, ferramenta.getMarca());
             stmt.setDouble(3, ferramenta.getCustoAquisicao());
@@ -24,24 +21,24 @@ public class FerramentaDAO {
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 ferramenta.setId(generatedKeys.getInt(1));
+                System.out.println("Ferramenta adicionada com ID: " + ferramenta.getId());
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Erro ao adicionar ferramenta: " + e.getMessage());
         }
     }
 
     public List<Ferramenta> listarFerramentas() {
         List<Ferramenta> ferramentas = new ArrayList<>();
         String sql = "SELECT * FROM ferramentas";
-        try (Connection conn = Conexao.getConnection(); 
-             Statement stmt = conn.createStatement(); 
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = Conexao.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Ferramenta ferramenta = new Ferramenta();
                 ferramenta.setId(rs.getInt("id"));
                 ferramenta.setNome(rs.getString("nome"));
                 ferramenta.setMarca(rs.getString("marca"));
-                ferramenta.setCustoAquisicao(rs.getDouble("custoAquisicao"));
+                ferramenta.setCustoAquisicao(rs.getDouble("custo_aquisicao"));
                 ferramentas.add(ferramenta);
             }
         } catch (SQLException e) {
@@ -51,9 +48,8 @@ public class FerramentaDAO {
     }
 
     public void atualizarFerramenta(Ferramenta ferramenta) {
-        String sql = "UPDATE ferramentas SET nome = ?, marca = ?, custoAquisicao = ? WHERE id = ?";
-        try (Connection conn = Conexao.getConnection(); 
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE ferramentas SET nome = ?, marca = ?, custo_aquisicao = ? WHERE id = ?";
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, ferramenta.getNome());
             stmt.setString(2, ferramenta.getMarca());
             stmt.setDouble(3, ferramenta.getCustoAquisicao());
@@ -66,8 +62,7 @@ public class FerramentaDAO {
 
     public void deletarFerramenta(int id) {
         String sql = "DELETE FROM ferramentas WHERE id = ?";
-        try (Connection conn = Conexao.getConnection(); 
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -78,8 +73,7 @@ public class FerramentaDAO {
     public Ferramenta buscarPorId(int id) {
         Ferramenta ferramenta = null;
         String sql = "SELECT * FROM ferramentas WHERE id = ?";
-        try (Connection conn = Conexao.getConnection(); 
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -87,7 +81,7 @@ public class FerramentaDAO {
                 ferramenta.setId(rs.getInt("id"));
                 ferramenta.setNome(rs.getString("nome"));
                 ferramenta.setMarca(rs.getString("marca"));
-                ferramenta.setCustoAquisicao(rs.getDouble("custoAquisicao"));
+                ferramenta.setCustoAquisicao(rs.getDouble("custo_aquisicao"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

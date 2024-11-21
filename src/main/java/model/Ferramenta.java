@@ -8,7 +8,7 @@ public class Ferramenta {
     private double custoAquisicao;
 
     public Ferramenta() {
-        this(2, "Machado", "Collins", 25);
+        this(0, "", "", 0.0);
     }
 
     public Ferramenta(int id, String nome, String marca, double custoAquisicao) {
