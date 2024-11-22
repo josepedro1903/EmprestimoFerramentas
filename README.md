@@ -40,3 +40,13 @@ Este projeto tem por objetivo criar um sistema de empréstimo de ferramentas. O 
 
 - **Desempenho:** 
     - O sistema deverá ser leve para a maquina do usuário sem compremeter o desempenho mesmo com muitos registros locais.
+
+
+## Login Banco de Dados
+
+  **Login:** root
+  
+  **Password:** admin
+
+  **Caminho:** [src/main/java/util/Conexao.java](url)
+  
