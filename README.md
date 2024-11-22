@@ -27,7 +27,7 @@ Este projeto tem por objetivo criar um sistema de empréstimo de ferramentas. O 
  - **Relatórios:** 
    - O sistema deve conter a funcionalidade de criar relatórios referente aos:
      - Emprestimos Ativos.
-     - Status das ferramentas disponiveis.
+     - Status das ferramentas emprestadas.
      - Emprestimos Realizado e finalizados.
      - Ranking dos empréstimos.
 
