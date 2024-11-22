@@ -48,5 +48,5 @@ Este projeto tem por objetivo criar um sistema de empréstimo de ferramentas. O 
   
   **Password:** admin
 
-  **Caminho:** [src/main/java/util/Conexao.java](url)
+  **Caminho:** [src/main/java/util/Conexao.java](src/main/java/util/Conexao.java)
   
