@@ -10,22 +10,20 @@ import model.Amigo;
 
 public class EmprestimoDAO {
 
+    // Adiciona um novo empréstimo ao banco de dados e associa as ferramentas ao empréstimo.
     public void adicionarEmprestimo(Emprestimo emprestimo, List<Integer> ferramentasIds) {
         String sql = "INSERT INTO emprestimos (amigo_id, data_emprestimo, data_devolucao) VALUES (?, ?, ?)";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            // Inserir empréstimo na tabela 'emprestimos'
             stmt.setInt(1, emprestimo.getAmigo_id());
             stmt.setDate(2, Date.valueOf(emprestimo.getDataEmprestimo()));
             stmt.setDate(3, null);
             stmt.executeUpdate();
 
-            // Recuperar o ID gerado para o empréstimo
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 int emprestimoId = rs.getInt(1);
 
-                // Associar ferramentas ao empréstimo na tabela 'emprestimos_ferramentas'
                 String sqlFerramentas = "INSERT INTO emprestimos_ferramentas (emprestimo_id, ferramenta_id) VALUES (?, ?)";
                 try (PreparedStatement stmtFerramentas = conn.prepareStatement(sqlFerramentas)) {
                     for (int ferramentaId : ferramentasIds) {
@@ -40,18 +38,17 @@ public class EmprestimoDAO {
         }
     }
 
+    // Atualiza os dados de um empréstimo existente e suas ferramentas associadas.
     public void atualizarEmprestimo(Emprestimo emprestimo, List<Integer> ferramentasIds) {
         String sql = "UPDATE emprestimos SET amigo_id = ?, data_emprestimo = ?, data_devolucao = ? WHERE id = ?";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Atualizar dados do empréstimo
             stmt.setInt(1, emprestimo.getAmigo_id());
             stmt.setDate(2, Date.valueOf(emprestimo.getDataEmprestimo()));
             stmt.setDate(3, emprestimo.getDataDevolucao() != null ? Date.valueOf(emprestimo.getDataDevolucao()) : null);
             stmt.setInt(4, emprestimo.getId());
             stmt.executeUpdate();
 
-            // Atualizar associação com ferramentas
             String deleteFerramentas = "DELETE FROM emprestimos_ferramentas WHERE emprestimo_id = ?";
             try (PreparedStatement stmtDelete = conn.prepareStatement(deleteFerramentas)) {
                 stmtDelete.setInt(1, emprestimo.getId());
@@ -71,6 +68,7 @@ public class EmprestimoDAO {
         }
     }
 
+    // Lista todos os empréstimos cadastrados no banco de dados.
     public List<Emprestimo> listarEmprestimos() {
         List<Emprestimo> emprestimos = new ArrayList<>();
         String sql = "SELECT * FROM emprestimos";
@@ -85,7 +83,6 @@ public class EmprestimoDAO {
                     emprestimo.setDataDevolucao(rs.getDate("data_devolucao").toLocalDate());
                 }
 
-                // Buscar ferramentas associadas
                 List<Integer> ferramentasIds = buscarFerramentasPorEmprestimo(emprestimo.getId());
                 emprestimo.setFerramentasIds(ferramentasIds);
 
@@ -97,6 +94,7 @@ public class EmprestimoDAO {
         return emprestimos;
     }
 
+    // Lista os empréstimos que ainda estão ativos (não devolvidos).
     public List<Emprestimo> listarEmprestimosAtivos() {
         List<Emprestimo> emprestimos = new ArrayList<>();
         String sql = "SELECT * FROM emprestimos WHERE data_devolucao IS NULL";
@@ -107,7 +105,6 @@ public class EmprestimoDAO {
                 emprestimo.setAmigo_id(rs.getInt("amigo_id"));
                 emprestimo.setDataEmprestimo(rs.getDate("data_emprestimo").toLocalDate());
 
-                // Buscar ferramentas associadas ao empréstimo
                 List<Integer> ferramentasIds = buscarFerramentasPorEmprestimo(emprestimo.getId());
                 emprestimo.setFerramentasIds(ferramentasIds);
 
@@ -119,18 +116,17 @@ public class EmprestimoDAO {
         return emprestimos;
     }
 
+    // Deleta um empréstimo e suas associações com ferramentas.
     public void deletarEmprestimo(int id) {
         String sql = "DELETE FROM emprestimos WHERE id = ?";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Remover associação com ferramentas
             String deleteFerramentas = "DELETE FROM emprestimos_ferramentas WHERE emprestimo_id = ?";
             try (PreparedStatement stmtDelete = conn.prepareStatement(deleteFerramentas)) {
                 stmtDelete.setInt(1, id);
                 stmtDelete.executeUpdate();
             }
 
-            // Remover o empréstimo
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -138,6 +134,7 @@ public class EmprestimoDAO {
         }
     }
 
+    // Busca os IDs das ferramentas associadas a um empréstimo.
     private List<Integer> buscarFerramentasPorEmprestimo(int emprestimoId) {
         List<Integer> ferramentasIds = new ArrayList<>();
         String sql = "SELECT ferramenta_id FROM emprestimos_ferramentas WHERE emprestimo_id = ?";
@@ -153,6 +150,7 @@ public class EmprestimoDAO {
         return ferramentasIds;
     }
 
+    // Registra a devolução de um empréstimo atualizando a data de devolução.
     public void devolverEmprestimo(int emprestimoId) {
         String sql = "UPDATE emprestimos SET data_devolucao = ? WHERE id = ?";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -164,6 +162,7 @@ public class EmprestimoDAO {
         }
     }
 
+    // Verifica se um amigo tem empréstimos ativos (não devolvidos).
     public boolean amigoTemEmprestimosAtivos(int amigoId) {
         String sql = "SELECT COUNT(*) FROM emprestimos WHERE amigo_id = ? AND data_devolucao IS NULL";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -178,6 +177,7 @@ public class EmprestimoDAO {
         return false;
     }
 
+    // Lista os amigos que nunca devolveram nenhum empréstimo.
     public List<Amigo> listarAmigosQueNuncaEntregaram() {
         String sql
                 = "SELECT a.id, a.nome, a.telefone "
@@ -199,5 +199,4 @@ public class EmprestimoDAO {
         }
         return amigos;
     }
-
 }

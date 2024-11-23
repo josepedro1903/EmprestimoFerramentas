@@ -9,6 +9,7 @@ import java.util.List;
 
 public class FerramentaDAO {
 
+    // Adiciona uma nova ferramenta ao banco de dados.
     public void adicionarFerramenta(Ferramenta ferramenta) {
         String sql = "INSERT INTO ferramentas (nome, marca, custo_aquisicao) VALUES (?, ?, ?)";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -17,7 +18,6 @@ public class FerramentaDAO {
             stmt.setDouble(3, ferramenta.getCustoAquisicao());
             stmt.executeUpdate();
 
-            // Recuperar o ID gerado automaticamente
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 ferramenta.setId(generatedKeys.getInt(1));
@@ -28,6 +28,7 @@ public class FerramentaDAO {
         }
     }
 
+    // Lista todas as ferramentas cadastradas no banco de dados.
     public List<Ferramenta> listarFerramentas() {
         List<Ferramenta> ferramentas = new ArrayList<>();
         String sql = "SELECT * FROM ferramentas";
@@ -46,6 +47,7 @@ public class FerramentaDAO {
         return ferramentas;
     }
 
+    // Atualiza os dados de uma ferramenta existente no banco de dados.
     public void atualizarFerramenta(Ferramenta ferramenta) {
         String sql = "UPDATE ferramentas SET nome = ?, marca = ?, custo_aquisicao = ? WHERE id = ?";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -59,6 +61,7 @@ public class FerramentaDAO {
         }
     }
 
+    // Deleta uma ferramenta do banco de dados com base no ID fornecido.
     public void deletarFerramenta(int id) {
         String sql = "DELETE FROM ferramentas WHERE id = ?";
         try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -69,6 +72,7 @@ public class FerramentaDAO {
         }
     }
 
+    // Busca uma ferramenta no banco de dados com base no ID fornecido.
     public Ferramenta buscarPorId(int id) {
         Ferramenta ferramenta = null;
         String sql = "SELECT * FROM ferramentas WHERE id = ?";
@@ -88,6 +92,7 @@ public class FerramentaDAO {
         return ferramenta;
     }
 
+    // Calcula o custo total de aquisição de todas as ferramentas cadastradas.
     public double calcularCustoTotalFerramentas() {
         String sql = "SELECT SUM(custoAquisicao) FROM ferramentas";
         try (Connection conn = Conexao.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {

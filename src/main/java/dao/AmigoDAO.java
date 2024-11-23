@@ -9,6 +9,7 @@ import java.util.List;
 
 public class AmigoDAO {
 
+    // Adiciona um novo amigo no banco de dados.
     public void adicionarAmigo(Amigo amigo) {
         String sql = "INSERT INTO amigos (nome, telefone) VALUES (?, ?)";
         try (Connection conexao = Conexao.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -22,6 +23,7 @@ public class AmigoDAO {
         }
     }
 
+    // Lista todos os amigos cadastrados no banco de dados.
     public List<Amigo> listarAmigos() {
         List<Amigo> amigos = new ArrayList<>();
         String sql = "SELECT * FROM amigos";
@@ -40,6 +42,7 @@ public class AmigoDAO {
         return amigos;
     }
 
+    // Atualiza os dados de um amigo existente no banco de dados.
     public void atualizarAmigo(Amigo amigo) {
         String sql = "UPDATE amigos SET nome = ?, telefone = ? WHERE id = ?";
         try (Connection conexao = Conexao.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -54,6 +57,7 @@ public class AmigoDAO {
         }
     }
 
+    // Deleta um amigo do banco de dados com base no ID fornecido.
     public void deletarAmigo(int id) {
         String sql = "DELETE FROM amigos WHERE id = ?";
         try (Connection conexao = Conexao.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -66,6 +70,7 @@ public class AmigoDAO {
         }
     }
 
+    // Busca um amigo no banco de dados com base no ID fornecido.
     public Amigo buscarPorId(int id) {
         Amigo amigo = null;
         String sql = "SELECT * FROM amigos WHERE id = ?";
@@ -84,6 +89,7 @@ public class AmigoDAO {
         return amigo;
     }
 
+    // Retorna o amigo que mais realizou empréstimos.
     public Amigo amigoComMaisEmprestimos() {
         String sql = "SELECT amigo_id, COUNT(*) AS total FROM emprestimos GROUP BY amigo_id ORDER BY total DESC LIMIT 1";
         try (Connection conn = Conexao.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -97,6 +103,7 @@ public class AmigoDAO {
         return null;
     }
 
+    // Retorna uma lista de amigos com empréstimos pendentes (sem data de devolução).
     public List<Amigo> amigosComPendencias() {
         List<Amigo> amigos = new ArrayList<>();
         String sql = "SELECT DISTINCT amigo_id FROM emprestimos WHERE data_devolucao IS NULL";
@@ -109,5 +116,4 @@ public class AmigoDAO {
         }
         return amigos;
     }
-
 }
