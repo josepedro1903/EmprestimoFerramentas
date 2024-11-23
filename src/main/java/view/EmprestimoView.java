@@ -3,6 +3,7 @@ package view;
 import dao.AmigoDAO;
 import dao.EmprestimoDAO;
 import dao.FerramentaDAO;
+import java.time.LocalDate;
 import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -31,7 +32,7 @@ public class EmprestimoView extends Application {
     private ListView<Ferramenta> ferramentasListView = new ListView<>();
     private ListView<String> emprestimosListView = new ListView<>();
     private DatePicker dataEmprestimoPicker = new DatePicker();
-
+    
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Gerenciamento de Empréstimos");
@@ -51,7 +52,7 @@ public class EmprestimoView extends Application {
         btnAdicionar.setOnAction(e -> {
             Amigo amigo = amigoComboBox.getSelectionModel().getSelectedItem();
             List<Ferramenta> ferramentasSelecionadas = ferramentasListView.getSelectionModel().getSelectedItems();
-            var dataEmprestimo = dataEmprestimoPicker.getValue();
+            LocalDate dataEmprestimo = dataEmprestimoPicker.getValue();
 
             if (amigo != null && !ferramentasSelecionadas.isEmpty() && dataEmprestimo != null) {
                 // Verificar se o amigo já possui empréstimos ativos
