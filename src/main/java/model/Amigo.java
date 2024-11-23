@@ -18,7 +18,7 @@ public class Amigo {
         this.telefone = telefone;
     }
 
-    // Getters
+    // Métodos getters
     public int getId() {
         return id;
     }
@@ -31,7 +31,7 @@ public class Amigo {
         return telefone;
     }
 
-    // Setters
+    // Métodos setters
     public void setId(int id) {
         this.id = id;
     }
@@ -44,6 +44,7 @@ public class Amigo {
         this.telefone = telefone;
     }
 
+    // Representação textual do objeto Amigo, que retorna o nome
     @Override
     public String toString() {
         return this.nome;

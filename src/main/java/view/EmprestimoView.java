@@ -32,10 +32,10 @@ public class EmprestimoView extends Application {
     private ListView<Ferramenta> ferramentasListView = new ListView<>();
     private ListView<String> emprestimosListView = new ListView<>();
     private DatePicker dataEmprestimoPicker = new DatePicker();
-    
+
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Gerenciamento de Empréstimos");
+        primaryStage.setTitle("Gerenciamento de eempréstimos");
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));

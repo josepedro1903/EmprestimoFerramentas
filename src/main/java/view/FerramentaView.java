@@ -29,7 +29,7 @@ public class FerramentaView extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Gerenciamento de Ferramentas");
+        primaryStage.setTitle("Gerenciamento de ferramentas");
 
         // Layout principal
         VBox layout = new VBox(10);
@@ -38,13 +38,13 @@ public class FerramentaView extends Application {
         // Campos de entrada
         nomeField.setPromptText("Nome");
         marcaField.setPromptText("Marca");
-        custoAquisicaoField.setPromptText("Custo de Aquisição");
+        custoAquisicaoField.setPromptText("Custo de aquisição");
 
         // Botões
-        Button btnAdicionar = new Button("Adicionar Ferramenta");
-        Button btnAtualizar = new Button("Atualizar Lista");
-        Button btnEditar = new Button("Editar Ferramenta");
-        Button btnExcluir = new Button("Excluir Ferramenta");
+        Button btnAdicionar = new Button("Adicionar ferramenta");
+        Button btnAtualizar = new Button("Atualizar lista");
+        Button btnEditar = new Button("Editar ferramenta");
+        Button btnExcluir = new Button("Excluir ferramenta");
         Button btnVoltar = new Button("Voltar");
 
         // Ação do botão "Voltar"

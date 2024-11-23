@@ -7,10 +7,12 @@ public class Ferramenta {
     private String marca;
     private double custoAquisicao;
 
+    // Construtor padrão
     public Ferramenta() {
         this(0, "", "", 0.0);
     }
 
+    // Construtor parametrizado
     public Ferramenta(int id, String nome, String marca, double custoAquisicao) {
         this.id = id;
         this.nome = nome;
@@ -18,6 +20,7 @@ public class Ferramenta {
         this.custoAquisicao = custoAquisicao;
     }
 
+    // Métodos getters
     public int getId() {
         return id;
     }
@@ -34,6 +37,7 @@ public class Ferramenta {
         return custoAquisicao;
     }
 
+    // Métodos setters
     public void setId(int id) {
         this.id = id;
     }
@@ -50,10 +54,7 @@ public class Ferramenta {
         this.custoAquisicao = custoAquisicao;
     }
 
-    public String test() {
-        return "ID: " + getId() + ", " + "NOME: " + getNome() + ", " + "Marca: " + getMarca() + ", " + "Custo: " + getCustoAquisicao() + ".";
-    }
-
+    // Representação textual do objeto Ferramenta, que retorna o nome.
     @Override
     public String toString() {
         return this.nome;

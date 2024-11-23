@@ -17,7 +17,7 @@ public class MainView extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Empréstimo Ferramentas");
+        primaryStage.setTitle("Empréstimo ferramentas");
 
         // Layout principal
         VBox layout = new VBox(20);
@@ -25,14 +25,14 @@ public class MainView extends Application {
         layout.setAlignment(Pos.CENTER);
 
         // Título
-        Label titulo = new Label("Empréstimo de ferramentas");
+        Label titulo = new Label("Empréstimo de Ferramentas");
         titulo.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         titulo.setTextFill(Color.BLACK);
 
         // Botões
-        Button btnAmigos = new Button("Gerenciar Amigos");
-        Button btnFerramentas = new Button("Gerenciar Ferramentas");
-        Button btnEmprestimos = new Button("Gerenciar Empréstimos");
+        Button btnAmigos = new Button("Gerenciar amigos");
+        Button btnFerramentas = new Button("Gerenciar ferramentas");
+        Button btnEmprestimos = new Button("Gerenciar empréstimos");
         Button btnRelatorios = new Button("Relatórios");
 
         // Configurações de estilo dos botões

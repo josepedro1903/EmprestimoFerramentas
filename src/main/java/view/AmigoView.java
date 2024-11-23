@@ -19,7 +19,7 @@ public class AmigoView extends Application {
     private TextField nomeField = new TextField();
     private TextField telefoneField = new TextField();
     private Amigo amigoSelecionado = null;
-    private Stage mainStage; // Referência à MainView
+    private Stage mainStage;
 
     // Construtor para passar o mainStage
     public AmigoView(Stage mainStage) {
@@ -28,7 +28,7 @@ public class AmigoView extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Gerenciamento de Amigos");
+        primaryStage.setTitle("Gerenciamento de amigos");
 
         // Layout principal
         VBox layout = new VBox(10);
@@ -36,13 +36,13 @@ public class AmigoView extends Application {
 
         // Campos de entrada
         nomeField.setPromptText("Nome");
-        telefoneField.setPromptText("Exemplo: 48 2512-4048");
+        telefoneField.setPromptText("Telefone (Ex.: (XX)XXXXX-XXXX)"); // Placeholder adicionado
 
         // Botões
-        Button btnAdicionar = new Button("Adicionar Amigo");
-        Button btnAtualizar = new Button("Atualizar Lista");
-        Button btnEditar = new Button("Editar Amigo");
-        Button btnExcluir = new Button("Excluir Amigo");
+        Button btnAdicionar = new Button("Adicionar amigo");
+        Button btnAtualizar = new Button("Atualizar lista");
+        Button btnEditar = new Button("Editar amigo");
+        Button btnExcluir = new Button("Excluir amigo");
         Button btnVoltar = new Button("Voltar");
 
         // Ação do botão "Voltar"
@@ -55,14 +55,7 @@ public class AmigoView extends Application {
         btnAdicionar.setOnAction(e -> {
             String nome = nomeField.getText();
             String telefone = telefoneField.getText();
-            
-            telefone = formatarTelefone(telefone);
-            
-            if (!validarTelefone(telefone)) {
-                mostrarMensagem("O número de telefone está inválido.\nTente usar o formato DDD ????-????,\nExemplo: 48 2512-4048\nTelefone digitado:"+ telefone);
-                return;
-            }
-            
+
             if (!nome.isEmpty() && !telefone.isEmpty()) {
                 Amigo novoAmigo = new Amigo();
                 novoAmigo.setNome(nome);
@@ -161,16 +154,4 @@ public class AmigoView extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-    private boolean validarTelefone(String telefone) {
-    // Expressão regular para validar o formato do telefone (ajuste conforme necessário)
-    return telefone.matches("\\(\\d{2}\\)\\d{5}\\-\\d{4}");
-    }
-    
-    private String formatarTelefone(String text) {
-    // Remove todos os caracteres não numéricos
-    String numbers = text.replaceAll("\\D", "");
-    // Formata o número de acordo com o padrão desejado (ajuste conforme necessário)
-    return numbers.replaceAll("(\\d{2})(\\d{5})(\\d{4})", "($1)$2-$3");
-}
 }
