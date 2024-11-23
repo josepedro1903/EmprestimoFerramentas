@@ -164,13 +164,13 @@ public class AmigoView extends Application {
     
     private boolean validarTelefone(String telefone) {
     // Expressão regular para validar o formato do telefone (ajuste conforme necessário)
-    return telefone.matches("\\(\\d{2}\\)\\d{4}\\-\\d{4}");
+    return telefone.matches("\\(\\d{2}\\)\\d{5}\\-\\d{4}");
     }
     
     private String formatarTelefone(String text) {
     // Remove todos os caracteres não numéricos
     String numbers = text.replaceAll("\\D", "");
     // Formata o número de acordo com o padrão desejado (ajuste conforme necessário)
-    return numbers.replaceAll("(\\d{2})(\\d{4})(\\d{4})", "($1)$2-$3");
+    return numbers.replaceAll("(\\d{2})(\\d{5})(\\d{4})", "($1)$2-$3");
 }
 }
