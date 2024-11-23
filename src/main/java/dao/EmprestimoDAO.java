@@ -6,6 +6,7 @@ import util.Conexao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.Amigo;
 
 public class EmprestimoDAO {
 
@@ -175,6 +176,28 @@ public class EmprestimoDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Amigo> listarAmigosQueNuncaEntregaram() {
+        String sql
+                = "SELECT a.id, a.nome, a.telefone "
+                + "FROM amigos a "
+                + "JOIN emprestimos e ON a.id = e.amigo_id "
+                + "GROUP BY a.id, a.nome, a.telefone "
+                + "HAVING COUNT(e.id) > 0 AND SUM(CASE WHEN e.data_devolucao IS NOT NULL THEN 1 ELSE 0 END) = 0";
+        List<Amigo> amigos = new ArrayList<>();
+        try (Connection conn = Conexao.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Amigo amigo = new Amigo();
+                amigo.setId(rs.getInt("id"));
+                amigo.setNome(rs.getString("nome"));
+                amigo.setTelefone(rs.getString("telefone"));
+                amigos.add(amigo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigos;
     }
 
 }

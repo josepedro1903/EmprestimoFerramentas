@@ -41,6 +41,7 @@ public class RelatorioView extends Application {
         Button btnRelatorioEmprestimosRealizados = new Button("Empréstimos realizados");
         Button btnRelatorioAmigosPendentes = new Button("Amigos com pendências");
         Button btnRelatorioMaisEmprestimos = new Button("Amigo com mais empréstimos");
+        Button btnRelatorioNuncaEntregaram = new Button("Amigos que nunca entregaram");
         Button btnVoltar = new Button("Voltar");
 
         // Área de texto para exibir os relatórios
@@ -145,6 +146,19 @@ public class RelatorioView extends Application {
             }
         });
 
+        // Ação do botão Relatório de Amigos que nunca entregaram
+        btnRelatorioNuncaEntregaram.setOnAction(e -> {
+            List<Amigo> nuncaEntregaram = emprestimoDAO.listarAmigosQueNuncaEntregaram();
+            StringBuilder relatorio = new StringBuilder("Amigos que nunca entregaram:\n");
+            for (Amigo amigo : nuncaEntregaram) {
+                relatorio.append("Amigo ID: ").append(amigo.getId())
+                        .append(", Nome: ").append(amigo.getNome())
+                        .append(", Telefone: ").append(amigo.getTelefone())
+                        .append("\n");
+            }
+            relatorioArea.setText(relatorio.toString());
+        });
+
         // Ação do botão Voltar
         btnVoltar.setOnAction(e -> {
             mainStage.show();
@@ -157,6 +171,7 @@ public class RelatorioView extends Application {
                 btnRelatorioEmprestimosRealizados,
                 btnRelatorioAmigosPendentes,
                 btnRelatorioMaisEmprestimos,
+                btnRelatorioNuncaEntregaram,
                 relatorioArea,
                 btnVoltar
         );
